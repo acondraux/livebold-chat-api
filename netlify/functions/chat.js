@@ -21,8 +21,12 @@ exports.handler = async function (event, context) {
   });
 
   const data = await response.json();
-  return {
-    statusCode: 200,
-    body: JSON.stringify(data)
-  };
+return {
+  statusCode: 200,
+  headers: {
+    "Access-Control-Allow-Origin": "*",
+    "Access-Control-Allow-Headers": "Content-Type"
+  },
+  body: JSON.stringify(data)
+};
 };
