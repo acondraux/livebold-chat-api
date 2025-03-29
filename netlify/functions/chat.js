@@ -13,7 +13,6 @@ exports.handler = async function (event, context) {
     };
   }
 
-exports.handler = async function (event, context) {
   const body = JSON.parse(event.body);
   const userMessage = body.message;
 
@@ -39,7 +38,7 @@ exports.handler = async function (event, context) {
     }
 
     const data = await response.json();
-    const reply = data.choices[0].message.content;
+    const reply = data.choices?.[0]?.message?.content || "Sorry, I didn’t understand that.";
 
     return {
       statusCode: 200,
@@ -55,11 +54,9 @@ exports.handler = async function (event, context) {
       statusCode: 500,
       headers: {
         "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Headers": "Content-Type",
         "Content-Type": "application/json"
       },
       body: JSON.stringify({ error: error.message })
     };
   }
 };
-
