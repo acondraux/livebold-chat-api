@@ -1,6 +1,19 @@
 const fetch = require("node-fetch");
 
 exports.handler = async function (event, context) {
+  if (event.httpMethod === "OPTIONS") {
+    return {
+      statusCode: 200,
+      headers: {
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Headers": "Content-Type",
+        "Access-Control-Allow-Methods": "POST, OPTIONS"
+      },
+      body: ""
+    };
+  }
+
+exports.handler = async function (event, context) {
   const body = JSON.parse(event.body);
   const userMessage = body.message;
 
