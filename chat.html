@@ -54,9 +54,19 @@
       } catch (err) {
         log.innerHTML += `<div style="color: red;"><strong>Error:</strong> ${err.message}</div>`;
         log.scrollTop = log.scrollHeight;
+        
       }
     });
   });
+  const data = await response.json();
+
+if (data.error) {
+  throw new Error(data.error);
+}
+
+const reply = data.message || "Hmm, no response from the planner.";
+log.innerHTML += `<div><strong>Live Bold:</strong> ${reply}</div>`;
+
 </script>
 
 </body>
