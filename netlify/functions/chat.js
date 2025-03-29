@@ -33,36 +33,5 @@ exports.handler = async function (event, context) {
       })
     });
 
-    if (!response.ok) {
-      throw new Error(`OpenAI error: ${response.status} ${response.statusText}`);
-    }
-
     const data = await response.json();
-    const reply = data.choices?.[0]?.message?.content || "Sorry, I didn’t understand that.";
-
-    console.log("OpenAI raw response:", data);
-
-const reply = data?.choices?.[0]?.message?.content || null;
-console.log("Extracted reply:", reply);
-
-return {
-  statusCode: 200,
-  headers: {
-    "Access-Control-Allow-Origin": "*",
-    "Access-Control-Allow-Headers": "Content-Type",
-    "Content-Type": "application/json"
-  },
-  body: JSON.stringify({ message: reply })
-};
-
-  } catch (error) {
-    return {
-      statusCode: 500,
-      headers: {
-        "Access-Control-Allow-Origin": "*",
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({ error: error.message })
-    };
-  }
-};
+    const message = data?.choices?.[0]?.message?.content || "Sorry, no
