@@ -1,0 +1,63 @@
+<!-- public/chat.html in your Netlify project -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Live Bold Chat</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body style="margin: 0; padding: 2rem; font-family: sans-serif; background: #f3f4f6;">
+<!-- LIVE BOLD PLANNER CHAT INTERFACE -->
+<div id="chatbox" style="max-width: 600px; margin: 40px auto; font-family: sans-serif;">
+  <h2 style="text-align: center;">Live Bold Trip Planner</h2>
+  
+  <div id="chat-log" style="border: 1px solid #ccc; padding: 16px; min-height: 200px; border-radius: 10px; background: #f9fafb; overflow-y: auto; max-height: 300px;"></div>
+  
+  <form id="chat-form" style="margin-top: 16px; display: flex;">
+    <input type="text" id="user-input" placeholder="Ask your travel question..." style="flex: 1; padding: 12px; border: 1px solid #ccc; border-radius: 10px;">
+    <button type="submit" style="margin-left: 8px; padding: 12px 20px; background-color: #38bdf8; color: white; border: none; border-radius: 10px; cursor: pointer;">Send</button>
+  </form>
+</div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const form = document.getElementById("chat-form");
+    const input = document.getElementById("user-input");
+    const log = document.getElementById("chat-log");
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const userMessage = input.value.trim();
+      if (!userMessage) return;
+
+      log.innerHTML += `<div><strong>You:</strong> ${userMessage}</div>`;
+      input.value = "";
+
+      try {
+        log.innerHTML += `<div><em>Thinking...</em></div>`;
+        log.scrollTop = log.scrollHeight;
+
+        const response = await fetch("https://liveboldtravel.netlify.app/.netlify/functions/chat", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ message: userMessage })
+        });
+
+        const data = await response.json();
+
+        if (data.error) {
+          throw new Error(data.error);
+        }
+
+        log.innerHTML += `<div><strong>Live Bold:</strong> ${data.message}</div>`;
+        log.scrollTop = log.scrollHeight;
+      } catch (err) {
+        log.innerHTML += `<div style="color: red;"><strong>Error:</strong> ${err.message}</div>`;
+        log.scrollTop = log.scrollHeight;
+      }
+    });
+  });
+</script>
+
+</body>
+</html>
